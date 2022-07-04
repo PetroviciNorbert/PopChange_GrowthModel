@@ -68,7 +68,7 @@ library (sphet) # spatial lag and error HET
 ##------------------------------------------------------------
 
 # Working directory
-setwd("C:/Users/Norbert/OneDrive/A03. Cornel, Codruta - Depentent urbanization/02. Model")
+setwd("C:/Users/Norbert/OneDrive/A03. Cornel, Codruta - Depentent urbanization/PopChange_GrowthModel")
 
 # Report Robust errors, VIFs and three digits
 set_summ_defaults (digits = 3, robust=TRUE, vifs=TRUE)

@@ -47,7 +47,7 @@ library(spsur) #for sarar
 library(spgwr) #Geographically Weighted Regression
 
 # Working directory
-setwd("C:/Users/Norbert/OneDrive/A03. Cornel, Codruta - Depentent urbanization/02. Model")
+setwd("C:/Users/Norbert/OneDrive/A03. Cornel, Codruta - Depentent urbanization/PopChange_GrowthModel")
 
 #Sets the number of digits to 3, and scientific notation to 7
 options(digits=3, scipen=3)
@@ -99,6 +99,12 @@ logLik(model1)
 logLik(model1A)logLik(model3)
 logLik(model3A)
 lrtest (model1, model1A, model3, model3A) 
+
+
+# Save  comparison
+#-------------------------------------------------------------------------
+model4.pred <- data.frame (model2018$SIRUTA, model3A$fitted.values)
+write.csv (model4.pred, file="C:/Users/Norbert/OneDrive/A03. Cornel, Codruta - Depentent urbanization/PopChange_GrowthModel/model4.pred.csv")
 
 # Spatial data preparation
 #-------------------------------------------------------------------------
