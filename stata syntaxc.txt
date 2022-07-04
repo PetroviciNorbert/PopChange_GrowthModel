@@ -1,0 +1,80 @@
+cd "C:\Users\Norbert\OneDrive\A03. Cornel, Codruta - Depentent urbanization\02. Model"
+
+
+* First differencing 2018-2011
+*-----------------------------
+
+import excel "C:\Users\Norbert\OneDrive\A03. Cornel, Codruta - Depentent urbanization\02. Model\model fix efects pract diff.xlsx", sheet("model") firstrow clear
+
+*Summary and correlations
+summarize LN_Pop2018_Pop2011 D_EmpForeign D_EmpLocal D_EmpPublic D_EmpForeign_BusinessServices D_EmpLocal_BusinessServices D_EmpForeign_Manufacturing D_EmpLocal_Manufacturing D_PIT_USDdef D_Turnover_USDdef 
+pwcorr LN_Pop2018_Pop2011 D_EmpForeign D_EmpLocal D_EmpPublic D_EmpForeign_BusinessServices D_EmpLocal_BusinessServices D_EmpForeign_Manufacturing D_EmpLocal_Manufacturing D_PIT_USDdef D_Turnover_USDdef Core Periurban Village, sig
+
+* Negative binomial regression first differencing
+* Molde 1
+nbreg PopAdj D_EmpForeign D_EmpLocal D_EmpPublic D_EmpForeign_BusServ_Core D_EmpLocal_BusServ_Core D_EmpForeign_BusServ_CoreofPeri D_EmpLocal_BusServ_CoreofPeri D_EmpForeign_BusServ_Periurban D_EmpLocal_BusServ_Periurban D_EmpForeign_BusServ_Village D_EmpLocal_BusServ_Village D_EmpForeign_Man_Core D_EmpLocal_Man_Core D_EmpForeign_Man_CoreofPeri D_EmpLocal_Man_CoreofPeri D_EmpForeign_Man_Periurban D_EmpLocal_Man_Periurban D_EmpForeign_Man_Village D_EmpLocal_Man_Village D_PIT_USDdef D_Turnover_USDdef, dispersion(mean) offset(Pop2011Offset) vce(robust)
+estat ic
+
+* * Molde 1A
+nbreg PopAdj D_EmpForeign D_EmpLocal D_EmpPublic D_EmpForeign_BusServ_Core D_EmpLocal_BusServ_Core D_EmpForeign_BusServ_Periurban D_EmpLocal_BusServ_Periurban D_EmpForeign_BusServ_Village D_EmpLocal_BusServ_Village D_EmpForeign_Man_Core D_EmpLocal_Man_Core D_EmpForeign_Man_Periurban D_EmpLocal_Man_Periurban D_EmpForeign_Man_Village D_EmpLocal_Man_Village D_PIT_USDdef D_Turnover_USDdef, dispersion(mean) offset(Pop2011Offset) vce(robust)
+estat ic
+
+* Geographicaly Weighted regression
+gwr LN_Pop2018_Pop2011 D_EmpForeign D_EmpLocal D_EmpPublic D_EmpForeign_BusServ_Core D_EmpLocal_BusServ_Core D_EmpForeign_BusServ_Periurban D_EmpLocal_BusServ_Periurban D_EmpForeign_BusServ_Village D_EmpLocal_BusServ_Village D_EmpForeign_Man_Core D_EmpLocal_Man_Core D_EmpForeign_Man_Periurban D_EmpLocal_Man_Periurban D_EmpForeign_Man_Village D_EmpLocal_Man_Village D_PIT_USDdef, east(Longitude) north(Latitude) saving(gwrcsglm) dots reps(1) test replace nolog outfile(gwrcsglm)
+
+gwr PopAdj D_EmpForeign D_EmpLocal D_EmpPublic D_EmpForeign_BusServ_Core D_EmpLocal_BusServ_Core D_EmpForeign_BusServ_Periurban D_EmpLocal_BusServ_Periurban D_EmpForeign_BusServ_Village D_EmpLocal_BusServ_Village D_EmpForeign_Man_Core D_EmpLocal_Man_Core D_EmpForeign_Man_Periurban D_EmpLocal_Man_Periurban D_EmpForeign_Man_Village D_EmpLocal_Man_Village D_PIT_USDdef, east(Longitude) north(Latitude) saving(gwrdiffout) dots reps(1) test family(nbinomial) link(log) lnoffset(PopAdj2011) replace nolog outfile(gwrdiffcoef)
+
+
+* Corss sectional 2018
+*-----------------------------
+import excel "C:\Users\Norbert\OneDrive\A03. Cornel, Codruta - Depentent urbanization\02. Model\model fix effects pract 2018.xlsx", sheet("model 2018") firstrow clear
+
+*Summary and correlations
+summarize LN_Pop2018_Pop2011 EmpForeign EmpLocal EmpPublic EmpForeign_BusinessServices EmpLocal_BusinessServices EmpForeign_Manufacturing  EmpLocal_Manufacturing D_PIT_USDdef D_Turnover_USDdef
+pwcorr LN_Pop2018_Pop2011 EmpForeign EmpLocal EmpPublic EmpForeign_BusinessServices EmpLocal_BusinessServices EmpForeign_Manufacturing EmpLocal_Manufacturing D_PIT_USDdef D_Turnover_USDdef Core Periurban Village, sig
+
+* Negative binomial regression 2018
+* Model 3
+nbreg PopAdj EmpForeign EmpLocal EmpPublic EmpForeign_BusServ_Core EmpLocal_BusServ_Core EmpForeign_BusServ_CoreofPeri EmpLocal_BusServ_CoreofPeri EmpForeign_BusServ_Periurban EmpLocal_BusServ_Periurban EmpForeign_BusServ_Village EmpLocal_BusServ_Village EmpForeign_Man_Core EmpLocal_Man_Core EmpForeign_Man_CoreofPeri EmpLocal_Man_CoreofPeri EmpForeign_Man_Periurban EmpLocal_Man_Periurban EmpForeign_Man_Village EmpLocal_Man_Village D_PIT_USDdef D_Turnover_USDdef, dispersion(mean) offset(Pop2011Offset) vce(robust)
+estat ic
+
+* Model 3A
+nbreg PopAdj EmpForeign EmpLocal EmpPublic EmpForeign_BusServ_Core EmpLocal_BusServ_Core EmpForeign_BusServ_Periurban EmpLocal_BusServ_Periurban EmpForeign_BusServ_Village EmpLocal_BusServ_Village EmpForeign_Man_Core EmpLocal_Man_Core EmpForeign_Man_Periurban EmpLocal_Man_Periurban EmpForeign_Man_Village EmpLocal_Man_Village D_PIT_USDdef D_Turnover_USDdef, dispersion(mean) offset(Pop2011Offset) vce(robust)
+estat ic
+
+* Geographicaly Weighted regression
+gwr LN_Pop2018_Pop2011 EmpForeign EmpLocal EmpPublic EmpForeign_BusServ_Core EmpLocal_BusServ_Core EmpForeign_BusServ_Periurban EmpLocal_BusServ_Periurban EmpForeign_BusServ_Village EmpLocal_BusServ_Village EmpForeign_Man_Core EmpLocal_Man_Core EmpForeign_Man_Periurban EmpLocal_Man_Periurban EmpForeign_Man_Village EmpLocal_Man_Village D_PIT_USDdef, east(Longitude) north(Latitude) saving(gwrglm) dots reps(1) test replace nolog outfile(gwrglm)
+
+gwr PopAdj EmpForeign EmpLocal EmpPublic EmpForeign_BusServ_Core EmpLocal_BusServ_Core EmpForeign_BusServ_Periurban EmpLocal_BusServ_Periurban EmpForeign_BusServ_Village EmpLocal_BusServ_Village EmpForeign_Man_Core EmpLocal_Man_Core EmpForeign_Man_Periurban EmpLocal_Man_Periurban EmpForeign_Man_Village EmpLocal_Man_Village D_PIT_USDdef, east(Longitude) north(Latitude) saving(gwrnb) dots reps(1) test family(nbinomial) link(log) lnoffset(PopAdj2011) replace nolog outfile(gwrnb)
+
+
+* Panel estimation 2011,2018
+*----------------------------
+
+import excel "C:\Users\Norbert\OneDrive\A03. Cornel, Codruta - Depentent urbanization\02. Model\model fix efects.xlsx", sheet("model fix efects") firstrow clear
+
+* Fixed effects
+xtset Siruta Year
+xtreg PopAdj Year  EmpPublic EmpLocal EmpForeign  EmpForeign_BusServ_Core EmpForeign_BusServ_CoreofPeri EmpForeign_BusServ_Periurban EmpForeign_BusServ_Village EmpLocal_BusServ_Core EmpLocal_BusServ_CoreofPeri EmpLocal_BusServ_Periurban EmpLocal_BusServ_Village EmpForeign_Man_Core EmpForeign_Man_CoreofPeri EmpForeign_Man_Periurban EmpForeign_Man_Village EmpLocal_Man_Core EmpLocal_Man_CoreofPeri EmpLocal_Man_Periurban EmpLocal_Man_Village  PIT_USDdef Turnover_USDdef,fe vce(robust) cformat(%9.3f) pformat(%5.3f) sformat(%8.2f)
+
+* Negative binomial fixed effects
+xtset Siruta Year
+xtnbreg PopAdj Year D_EmpPublic D_EmpLocal D_EmpForeign D_EmpForeign_BusServ_Core D_EmpForeign_BusServ_CoreofPeri D_EmpForeign_BusServ_Periurban D_EmpForeign_BusServ_Village D_EmpLocal_BusServ_Core D_EmpLocal_BusServ_CoreofPeri D_EmpLocal_BusServ_Periurban D_EmpLocal_BusServ_Village D_EmpForeign_Man_Core D_EmpForeign_Man_CoreofPeri D_EmpForeign_Man_Periurban D_EmpForeign_Man_Village D_EmpLocal_Man_Core D_EmpLocal_Man_CoreofPeri D_EmpLocal_Man_Periurban D_EmpLocal_Man_Village D_PIT_USDdef D_Turnover_USDdef, fe offset(Pop2011Offset) cformat(%9.3f) pformat(%5.3f) sformat(%8.2f)
+
+
+cd "C:\Users\Norbert\OneDrive\A03. Cornel, Codruta - Depentent urbanization\02. Model"
+
+spset SIRUTA, coord(Latitude Longitude) coordsys(latlong)
+spmatrix create contiguity w
+spset, modify filename(<filename>_shp.dta)
+spregress LN_Pop2018_Pop2011 D_EmpLocal D_EmpPublic D_EmpForeign_BusServ_Core D_EmpLocal_BusServ_Core D_EmpForeign_BusServ_CoreofPeri D_EmpLocal_BusServ_CoreofPeri D_EmpLocal_BusServ_Periurban D_EmpForeign_Man_CoreofPeri D_EmpForeign_Man_Periurban D_EmpForeign_Man_Village D_PIT_USDdef, gs2sls dvarlag(W)
+
+
+
+  file UAT-uri_shp.dta created
+  file UAT-uri.dta     created
+
+spshape2dta "C:\Users\Norbert\OneDrive\A03. Cornel, Codruta - Depentent urbanization\02. Model\UAT-uri.shp"
+spset SIRUTA, modify
+
+C:\Users\Norbert\OneDrive\A03. Cornel, Codruta - Depentent urbanization\02. Model\UAT-uri.shp
